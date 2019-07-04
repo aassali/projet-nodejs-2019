@@ -2,33 +2,29 @@ const bcrypt = require('bcrypt');
 const { createModel } = require('../model');
 const connect = require('../../../clients/mongodb');
 const collections = require('../../../enums/collections');
-
+const deleteUserPrivateKeys = require('../../../helpers/deleteUserPrivateKeys');
+const findOneByEmail = require('./findOneByEmail');
 
 module.exports = (userToCreate) => {
-  const user = {
-    ...userToCreate,
-    password: bcrypt.hashSync(userToCreate.password, 10),
-  };
-
-  return createModel.validate(user)
-    .then(() => connect())
-    .then(db => db.collection(collections.USERS))
-    .then(collection => collection.insertOne(user))
-    .then(dbResponse => dbResponse.ops[0]);
-
-  /* Can also be write like the
-  return model.validate(listToCreate, model)
+  return createModel.validate(userToCreate)
     .then(() => {
-      return connect()
+      const user = {
+        ...userToCreate,
+        password: bcrypt.hashSync(userToCreate.password, 10),
+      };
+      return user;
     })
-    .then((db) => {
-      return db.collection(collections.LISTS)
-    })
-    .then((collection) => {
-      return collection.insertOne(listToCreate)
-    })
-    .then((dbResponse) => {
-      return dbResponse.ops[0]
+    .then((user) => {
+      return findOneByEmail(user.email)
+        .catch((err) => {
+          if (err.status !== 404) {
+            throw err;
+          }
+
+          return connect()
+            .then(db => db.collection(collections.USERS))
+            .then(collection => collection.insertOne(user))
+            .then(dbResponse => deleteUserPrivateKeys(dbResponse.ops[0]));
+        });
     });
-  */
 };

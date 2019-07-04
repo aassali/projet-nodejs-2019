@@ -1,12 +1,12 @@
 const updateOneById = require('../services/updateOneById');
 
 module.exports = (req, res, next) => {
-  const listToUpdate = req.body;
-  const { listId } = req.params;
+  const userToUpdate = req.body;
+  const { userId } = req.params;
 
-  updateOneById(listId, listToUpdate)
-    .then((list) => {
-      res.json(list);
+  updateOneById(userId, userToUpdate)
+    .then((user) => {
+      res.json(user);
     })
     .catch((err) => {
       next(err);

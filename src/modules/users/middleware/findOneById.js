@@ -1,10 +1,8 @@
-const updateOneById = require('../services/updateOneById');
+const findOneById = require('../services/findOneById');
 
 module.exports = (req, res, next) => {
-  const listToUpdate = req.body;
   const { listId } = req.params;
-
-  updateOneById(listId, listToUpdate)
+  findOneById(listId)
     .then((list) => {
       res.json(list);
     })

@@ -1,10 +1,9 @@
-const updateOneById = require('../services/updateOneById');
+const deleteOneById = require('../services/deleteOneById');
 
 module.exports = (req, res, next) => {
-  const listToUpdate = req.body;
   const { listId } = req.params;
 
-  updateOneById(listId, listToUpdate)
+  deleteOneById(listId)
     .then((list) => {
       res.json(list);
     })

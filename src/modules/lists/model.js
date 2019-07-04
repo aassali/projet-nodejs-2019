@@ -9,7 +9,6 @@ const createModel = joi.object().keys({
 const updateModel = joi.object().keys({
   name: joi.string(),
   description: joi.string(),
-  userId: joi.string().required(),
 });
 
 module.exports = {
