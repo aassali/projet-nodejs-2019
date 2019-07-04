@@ -1,11 +1,10 @@
 const createOne = require('../services/createOne');
 
 module.exports = (req, res, next) => {
-  const { userId } = req.params;
-  const listToCreate = req.body;
-  createOne(listToCreate, userId)
-    .then((list) => {
-      res.json(list);
+  const userToCreate = req.body;
+  createOne(userToCreate)
+    .then((user) => {
+      res.send(user);
     })
     .catch((err) => {
       next(err);
